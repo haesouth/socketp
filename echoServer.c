@@ -4,8 +4,9 @@
 #include <string.h>
 
 #define PORT 10000
+#define BUFSIZE 10000
 
-char buffer[100] = "hello i'm server \n";
+char buffer[BUFSIZE] = "hello i'm server \n";
 char rcvBuffer[100];
 int main(){
 	int c_socket, s_socket;
@@ -46,6 +47,9 @@ int main(){
 		printf("/client is connected\n");
 		printf("클라이언트 접속 허용\n");
 		while(1){
+			char *token;
+			char *str[3];
+			int i = 0;
 			n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
 			rcvBuffer[n] = '\0';
 			printf("[%s] received\n", rcvBuffer);
@@ -58,13 +62,26 @@ int main(){
 				strcpy(buffer, "haesouth");
 			else if(!strncmp(rcvBuffer, "몇 살이야?", strlen("몇 살이야?")))
 				strcpy(buffer, "21");
-			//n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
-			//printf("rcvBuffer: %s\n", rcvBuffer);
+			else if(!strncasecmp(rcvBuffer, "strlen ", 7) & strlen(rcvBuffer) > 7)
+				sprintf(buffer, "문자열의 길이는 %d입니다.", strlen(rcvBuffer) -7 );
+			else if(!strncasecmp(rcvBuffer, "strcmp ", 7)){
+				i = 0;
+				token = strtok(rcvBuffer, " ");
+				while(token != NULL){
+					str[i++] = token;
+					token = strtok(NULL, " ");
+				}
+				if(i < 3)
+					sprintf(buffer, "문자열 비교 위해서 두 문자열이 필요.");
+				else if(!strcmp(str[1], str[2]))
+					sprintf(buffer, "%s와 %s는 같은 문자열입니다.", str[1], str[2]);
+				else 
+					sprintf(buffer, "%s와 %s는 다른 문자열입니다.", str[1], str[2]);
+				}
 			else
-				strcpy(buffer, "x");
-
-			n=strlen(buffer);
-			write(c_socket, buffer, n); //클라이언트에게 buffer의 내용을 전송함
+					strcpy(buffer, "x");
+				n = strlen(buffer);
+				write(c_socket, buffer, n); //클라이언트에게 buffer의 내용을 전송함
 			}
 		close(c_socket);
 		if (strncasecmp(rcvBuffer, "kill server", 11) == 0)

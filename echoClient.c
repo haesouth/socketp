@@ -8,6 +8,7 @@
 #define BUFSIZE 100
 
 int main(){
+//5-3
 	int c_socket; 
 	struct sockaddr_in c_addr;
 	int n;
