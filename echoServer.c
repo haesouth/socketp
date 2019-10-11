@@ -54,6 +54,10 @@ int main(){
 				break;
 			else if(!strncmp(rcvBuffer, "안녕하세요",  strlen("안녕하세요")))
 				strcpy(buffer, "안녕하세요. 만나서 반가워요.");
+			else if(!strncmp(rcvBuffer, "이름이 머야?", strlen("이름이 머야?")))
+				strcpy(buffer, "haesouth");
+			else if(!strncmp(rcvBuffer, "몇 살이야?", strlen("몇 살이야?")))
+				strcpy(buffer, "21");
 			//n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
 			//printf("rcvBuffer: %s\n", rcvBuffer);
 			else
